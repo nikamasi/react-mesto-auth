@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Header from "./Header.js";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
@@ -252,46 +252,21 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      <Header isLogged={isLogged} email={email} onLogout={handleLogout} />
       <Switch>
         <Route path="/sign-in">
-          {isLogged ? (
-            <Redirect to="/" />
-          ) : (
-            <>
-              <Header
-                isLogged={isLogged}
-                navItems={
-                  <Link to="/sign-up" className="header__nav-element link">
-                    Регистрация
-                  </Link>
-                }
-              />
-              <Login onSubmit={handleSignIn} />
-            </>
-          )}
+          {isLogged ? <Redirect to="/" /> : <Login onSubmit={handleSignIn} />}
         </Route>
         <Route path="/sign-up">
           {isLogged ? (
             <Redirect to="/" />
           ) : (
-            <>
-              <Header
-                isLogged={isLogged}
-                navItems={
-                  <Link to="/sign-in" className="header__nav-element link">
-                    Войти
-                  </Link>
-                }
-              />
-              <Register onSubmit={handleSignUp} />
-            </>
+            <Register onSubmit={handleSignUp} />
           )}
         </Route>
         <ProtectedRoute
           path="/"
           isLogged={isLogged}
-          onLogout={handleLogout}
-          email={email}
           component={Main}
           cards={cards}
           onEditProfile={handleEditProfileClick}
