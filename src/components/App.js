@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { Link, Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Header from "./Header.js";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
@@ -94,6 +94,7 @@ function App() {
 
   function handleCardDeleteClick(card) {
     setCardToDelete(card);
+    setIsDeletePopupOpen(true);
   }
 
   function handleCardDelete() {
@@ -201,12 +202,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (cardToDelete) {
-      setIsDeletePopupOpen(true);
-    }
-  }, [cardToDelete]);
-
-  useEffect(() => {
     if (isLogged) {
       history.push("/");
     }
@@ -235,8 +230,8 @@ function App() {
       .then(() => {
         setIsInfoTooltipOpen(true);
         setInfoTooltipMessage({
-          success: true,
           text: "Вы успешно зарегистрировались",
+          success: true,
         });
       })
       .then(() => history.push("/sign-in"))
@@ -257,29 +252,46 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header
-        onLogout={handleLogout}
-        email={email}
-        isLogged={isLogged}
-      ></Header>
       <Switch>
         <Route path="/sign-in">
           {isLogged ? (
             <Redirect to="/" />
           ) : (
-            <Login onSubmit={handleSignIn}></Login>
+            <>
+              <Header
+                isLogged={isLogged}
+                navItems={
+                  <Link to="/sign-up" className="header__nav-element link">
+                    Регистрация
+                  </Link>
+                }
+              />
+              <Login onSubmit={handleSignIn} />
+            </>
           )}
         </Route>
         <Route path="/sign-up">
           {isLogged ? (
             <Redirect to="/" />
           ) : (
-            <Register onSubmit={handleSignUp}></Register>
+            <>
+              <Header
+                isLogged={isLogged}
+                navItems={
+                  <Link to="/sign-in" className="header__nav-element link">
+                    Войти
+                  </Link>
+                }
+              />
+              <Register onSubmit={handleSignUp} />
+            </>
           )}
         </Route>
         <ProtectedRoute
           path="/"
           isLogged={isLogged}
+          onLogout={handleLogout}
+          email={email}
           component={Main}
           cards={cards}
           onEditProfile={handleEditProfileClick}

@@ -1,25 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import Card from "./Card.js";
 
 function Main(props) {
   const currentUser = useContext(CurrentUserContext);
-  const [cardElements, setCardElements] = useState([]);
 
-  useEffect(() => {
-    const cards = props.cards.map((card) => {
-      return (
-        <Card
-          card={card}
-          key={card._id}
-          onCardClick={props.onCardClick}
-          onCardLike={props.onCardLike}
-          onCardDeleteClick={props.onCardDeleteClick}
-        ></Card>
-      );
-    });
-    setCardElements(cards);
-  }, [props.cards]);
+  const cards = props.cards.map((card) => {
+    return (
+      <Card
+        card={card}
+        key={card._id}
+        onCardClick={props.onCardClick}
+        onCardLike={props.onCardLike}
+        onCardDeleteClick={props.onCardDeleteClick}
+      ></Card>
+    );
+  });
 
   return (
     <main className="content">
@@ -52,7 +48,7 @@ function Main(props) {
         ></button>
       </section>
       <section className="gallery" aria-label="Фото галерея">
-        {cardElements}
+        {cards}
       </section>
     </main>
   );
